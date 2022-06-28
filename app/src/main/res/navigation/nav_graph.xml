@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/tapFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.greenlight.ui.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_zoneFragment"
+            app:destination="@id/zoneFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/zoneFragment"
+        android:name="com.example.greenlight.ui.ZoneFragment"
+        android:label="fragment_zone"
+        tools:layout="@layout/fragment_zone" />
+    <fragment
+        android:id="@+id/tapFragment"
+        android:name="com.example.greenlight.ui.TapFragment"
+        android:label="fragment_tap"
+        tools:layout="@layout/fragment_tap" >
+        <action
+            android:id="@+id/action_tapFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/tapFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
