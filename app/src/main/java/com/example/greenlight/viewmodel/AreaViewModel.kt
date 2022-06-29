@@ -21,10 +21,4 @@ class AreaViewModel @Inject constructor(private val arearepo: AreaRepo) : ViewMo
             arearepo.getAreaList()
         }
     }
-//    fun addMoney(dataStore: DataStore){
-//        arearepo.addMoneyToRoom(dataStore)
-//    }
-//    fun getAllMoney(): LiveData<List<DataStore>> {
-//        return arearepo.getAllMoney()
-//    }
 }

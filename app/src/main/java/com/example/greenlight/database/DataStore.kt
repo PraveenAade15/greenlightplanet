@@ -14,5 +14,5 @@ data class DataStore(
     val sales_region: List<AreaResponse>?,
     val sales_zone: List<AreaResponse>?
 ) {
-//    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Int? = null
+
 }

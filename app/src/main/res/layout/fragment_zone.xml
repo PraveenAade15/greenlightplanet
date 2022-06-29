@@ -6,22 +6,25 @@
     android:layout_height="match_parent"
     android:background="#F1C11C"
     tools:context=".ui.ZoneFragment">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        android:minHeight="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="fill_parent"
-        android:background="@color/black"
         android:layout_height="wrap_content"
-        android:textColorPrimary="@color/black">
+        android:background="@color/black"
+        android:minHeight="?attr/actionBarSize"
+        android:textColorPrimary="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Metrics"
-            android:textStyle="bold"
             android:textColor="@color/back_ground"
-            android:layout_height="wrap_content"/>
+            android:textSize="24sp"
+            android:textStyle="bold" />
         <!--Custom Views for ToolBar-->
         <ImageView
             android:id="@+id/back"
@@ -30,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="left"
             android:layout_marginLeft="19dp"
-            android:src="@drawable/ic_back_press"/>
+            android:src="@drawable/ic_back_press" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -46,31 +49,33 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
     <EditText
         android:id="@+id/search"
-        app:layout_constraintTop_toBottomOf="@+id/textPer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/bg_search"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_search"
+        android:padding="10dp"
         android:queryBackground="@color/black"
-        android:layout_height="wrap_content"/>
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textPer" />
 
     <TextView
         android:id="@+id/textPerOne"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Zone"
         android:background="@drawable/bg_zone"
+        android:gravity="center"
+        android:text="Zone"
         android:textColor="@color/white"
         android:textSize="24sp"
-        android:gravity="center"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

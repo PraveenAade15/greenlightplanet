@@ -45,63 +45,22 @@ class ZoneFragment : Fragment(), CountryClickListener {
         // Inflate the layout for this fragment
         _binding = FragmentZoneBinding.inflate(layoutInflater, container, false)
         viewModel.getAllArea()
+        initObserve()
+        onBottomButtonBackPress()
         binding.recyclerViewArea.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewArea.isNestedScrollingEnabled = false
-        initObserve()
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (str.equals("sales_area")) {
-                    binding.search.visibility = View.GONE
-                    Log.d("TAG", "onViewCreatedb: ")
-                    dataStore.sales_region?.let { it1 -> areaAdapter.upDateList(it1) }
-
-                } else if (str.equals("sales_region")) {
-                    binding.search.visibility = View.GONE
-                    dataStore.sales_zone?.let { it1 -> areaAdapter.upDateList(it1) }
-                } else if (str.equals("sales_zone")) {
-                    binding.search.visibility = View.GONE
-                    dataStore.sales_country?.let { it1 -> areaAdapter.upDateList(it1) }
-
-                } else if (str.equals("sales_country")) {
-                    //back close
-                    val isSuccess = findNavController().navigateUp()
-                    if (!isSuccess) requireActivity().onBackPressed()
-
-                }
-            }
-
-        })
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        clickFunction()
-
+        clickSearch()
         binding.back.setOnClickListener {
-            Log.d("TAG", "onViewCreatedb: " + str)
-            if (str.equals("sales_area")) {
-                binding.search.visibility = View.GONE
-                Log.d("TAG", "onViewCreatedb: ")
-                dataStore.sales_region?.let { it1 -> areaAdapter.upDateList(it1) }
-
-            } else if (str.equals("sales_region")) {
-                binding.search.visibility = View.GONE
-                dataStore.sales_zone?.let { it1 -> areaAdapter.upDateList(it1) }
-            } else if (str.equals("sales_zone")) {
-                binding.search.visibility = View.GONE
-                dataStore.sales_country?.let { it1 -> areaAdapter.upDateList(it1) }
-
-            } else if (str.equals("sales_country")) {
-                //back close
-                val isSuccess = findNavController().navigateUp()
-                if (!isSuccess) requireActivity().onBackPressed()
-
-            }
+            backPressOnClick()
         }
     }
+//observe data from viewModel using live data Api call
 
     private fun initObserve() {
         viewModel.areaLiveData.observe(viewLifecycleOwner, Observer {
@@ -172,13 +131,25 @@ class ZoneFragment : Fragment(), CountryClickListener {
                 is NetworkResult.Loading -> {
 
                 }
-
             }
 
         })
     }
+    //back functionality
 
-    private fun clickFunction() {
+    private fun onBottomButtonBackPress() {
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                backPressOnClick()
+            }
+
+        })
+
+    }
+
+    //Search functionality on Area list
+
+    private fun clickSearch() {
         binding.search.addTextChangedListener(object : TextWatcher {
 
             override fun beforeTextChanged(
@@ -214,13 +185,36 @@ class ZoneFragment : Fragment(), CountryClickListener {
             override fun afterTextChanged(editable: Editable) {}
         })
     }
+    //back press button click
+
+    fun backPressOnClick() {
+        Log.d("TAG", "onViewCreatedb: " + str)
+        if (str.equals("sales_area")) {
+            binding.search.visibility = View.GONE
+            Log.d("TAG", "onViewCreatedb: ")
+            dataStore.sales_region?.let { it1 -> areaAdapter.upDateList(it1) }
+
+        } else if (str.equals("sales_region")) {
+            binding.search.visibility = View.GONE
+            dataStore.sales_zone?.let { it1 -> areaAdapter.upDateList(it1) }
+        } else if (str.equals("sales_zone")) {
+            binding.search.visibility = View.GONE
+            dataStore.sales_country?.let { it1 -> areaAdapter.upDateList(it1) }
+
+        } else if (str.equals("sales_country")) {
+            //back close
+            val isSuccess = findNavController().navigateUp()
+            if (!isSuccess) requireActivity().onBackPressed()
+
+        }
+
+    }
 
     override fun clickOnArea(
         areaResponse: com.example.greenlight.database.AreaResponse
     ) {
         str = areaResponse?.name
-        Log.d("TAG", "onViewCreateclickOnArea: " + str)
-
+        Log.d("TAG", "clickOnArea: " + str)
         if (areaResponse.name.equals("sales_country")) {
             binding.textPer.text = areaResponse.value + "  Performance"
             dataStore.sales_zone?.let { areaAdapter.upDateList(it) }
@@ -233,20 +227,14 @@ class ZoneFragment : Fragment(), CountryClickListener {
             binding.textPer.text = areaResponse.value + "  Performance"
             dataStore.sales_area?.let { areaAdapter.upDateList(it) }
         }
-//        else {
-//            binding.search.visibility = View.VISIBLE
-//            binding.search.setQueryHint("Search by Name");
-//            binding.textPer.text = areaResponse.value + "  Performance"
-//
-//        }
-
-//        Toast.makeText(context,"Cell clicked", Toast.LENGTH_SHORT).show()
     }
 
     override fun onStrValue(str: String) {
         this.str = str
 
     }
+
+
 
 
 }

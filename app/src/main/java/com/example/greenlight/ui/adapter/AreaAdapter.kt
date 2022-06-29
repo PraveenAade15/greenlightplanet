@@ -18,7 +18,8 @@ class AreaAdapter @Inject constructor(
 ) : RecyclerView.Adapter<AppViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
-        val binding = ItemSelectAreaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemSelectAreaBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return AppViewHolder(binding)
     }
 
@@ -26,7 +27,7 @@ class AreaAdapter @Inject constructor(
         val search = list[position]
         holder.setData(search)
         cellClickListener.onStrValue(search.name)
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
             cellClickListener.clickOnArea(search)
         }
     }
@@ -35,8 +36,9 @@ class AreaAdapter @Inject constructor(
     override fun getItemCount(): Int {
         return list.size
     }
-    fun upDateList(list: List<AreaResponse>){
-        this.list=list
+
+    fun upDateList(list: List<AreaResponse>) {
+        this.list = list
         notifyDataSetChanged()
 
     }
@@ -45,13 +47,12 @@ class AreaAdapter @Inject constructor(
 }
 
 class AppViewHolder(
-    val itemlayoutBinding: ItemSelectAreaBinding,
-//    val onItemClicked: OnItemClicked
+    val itemlayoutBinding: ItemSelectAreaBinding
 ) : RecyclerView.ViewHolder(itemlayoutBinding.root) {
 
     fun setData(salesCountry: AreaResponse) {
         itemlayoutBinding.apply {
-           itemlayoutBinding.tvArea.text=salesCountry.value
+            itemlayoutBinding.tvArea.text = salesCountry.value
         }
     }
 
