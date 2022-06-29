@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_gravity="center"
-            android:text="Metrics"
+            android:text="@string/metrics"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/back_ground"
@@ -36,7 +36,7 @@
     </androidx.appcompat.widget.Toolbar>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnPerform"
-        android:text="Performance By Zone"
+        android:text="@string/performance_by_zone"
         android:textSize="16sp"
         android:textColor="@color/white"
         android:background="@drawable/bg_button"

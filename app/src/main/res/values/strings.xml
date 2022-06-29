@@ -2,4 +2,10 @@
     <string name="app_name">GreenLight</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="metrics">Metrics</string>
+    <string name="performance_by_zone">Performance By Zone</string>
+    <string name="tap_here_for_fun">Tap Here for Fun !</string>
+    <string name="france_performance">France Performance</string>
+    <string name="zone">Zone</string>
+    <string name="state_is_selected">State is selected</string>
 </resources>

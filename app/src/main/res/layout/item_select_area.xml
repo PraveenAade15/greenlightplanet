@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_area"
         android:padding="10dp"
-        android:text="State is selected"
+        android:text="@string/state_is_selected"
         android:textColor="#380ACC"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
