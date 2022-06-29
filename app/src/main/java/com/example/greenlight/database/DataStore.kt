@@ -1,14 +1,18 @@
 package com.example.greenlight.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "characters")
+@Entity(
+    tableName = "articles"
+)
 data class DataStore(
-    @PrimaryKey(autoGenerate = true)
-    val sales_area: List<AreaResponse>,
-    val sales_country: List<AreaResponse>,
-    val sales_region: List<AreaResponse>,
-    val sales_zone: List<AreaResponse>
+
+    val sales_area: List<AreaResponse>?,
+    val sales_country: List<AreaResponse>?,
+    val sales_region: List<AreaResponse>?,
+    val sales_zone: List<AreaResponse>?
 ) {
+//    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Int? = null
 }

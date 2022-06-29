@@ -1,32 +1,32 @@
 package com.example.greenlight.ui
 
 import android.content.ContentValues
-import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.greenlight.R
 import com.example.greenlight.callbacks.CountryClickListener
+import com.example.greenlight.database.AreaResponse
 import com.example.greenlight.database.DataStore
 import com.example.greenlight.databinding.FragmentZoneBinding
-import com.example.greenlight.models.AreaResponse
 import com.example.greenlight.models.ResponseData
 import com.example.greenlight.models.SalesArea
-import com.example.greenlight.models.SalesCountry
 import com.example.greenlight.ui.adapter.AreaAdapter
 import com.example.greenlight.utils.NetworkResult
 import com.example.greenlight.viewmodel.AreaViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class ZoneFragment : Fragment(), CountryClickListener {
@@ -37,7 +37,7 @@ class ZoneFragment : Fragment(), CountryClickListener {
     private val viewModel by viewModels<AreaViewModel>()
     private lateinit var areaAdapter: AreaAdapter
     private var str: String? = null
-
+    var objectListNew = ArrayList<AreaResponse>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,29 +48,62 @@ class ZoneFragment : Fragment(), CountryClickListener {
         binding.recyclerViewArea.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewArea.isNestedScrollingEnabled = false
-        initbserve()
+        initObserve()
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (str.equals("sales_area")) {
+                    binding.search.visibility = View.GONE
+                    Log.d("TAG", "onViewCreatedb: ")
+                    dataStore.sales_region?.let { it1 -> areaAdapter.upDateList(it1) }
+
+                } else if (str.equals("sales_region")) {
+                    binding.search.visibility = View.GONE
+                    dataStore.sales_zone?.let { it1 -> areaAdapter.upDateList(it1) }
+                } else if (str.equals("sales_zone")) {
+                    binding.search.visibility = View.GONE
+                    dataStore.sales_country?.let { it1 -> areaAdapter.upDateList(it1) }
+
+                } else if (str.equals("sales_country")) {
+                    //back close
+                    val isSuccess = findNavController().navigateUp()
+                    if (!isSuccess) requireActivity().onBackPressed()
+
+                }
+            }
+
+        })
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.back.setOnClickListener {
+        clickFunction()
 
-            if (str.equals("sales_country")) {
+        binding.back.setOnClickListener {
+            Log.d("TAG", "onViewCreatedb: " + str)
+            if (str.equals("sales_area")) {
+                binding.search.visibility = View.GONE
+                Log.d("TAG", "onViewCreatedb: ")
+                dataStore.sales_region?.let { it1 -> areaAdapter.upDateList(it1) }
+
+            } else if (str.equals("sales_region")) {
+                binding.search.visibility = View.GONE
+                dataStore.sales_zone?.let { it1 -> areaAdapter.upDateList(it1) }
+            } else if (str.equals("sales_zone")) {
+                binding.search.visibility = View.GONE
+                dataStore.sales_country?.let { it1 -> areaAdapter.upDateList(it1) }
+
+            } else if (str.equals("sales_country")) {
                 //back close
                 val isSuccess = findNavController().navigateUp()
                 if (!isSuccess) requireActivity().onBackPressed()
-            } else if (str.equals("sales_zone")) {
-                areaAdapter.upDateList(dataStore.sales_country)
-            } else if (str.equals("sales_region")) {
-                areaAdapter.upDateList(dataStore.sales_zone)
-            } else if (str.equals("sales_area")) {
-                areaAdapter.upDateList(dataStore.sales_region)
+
             }
         }
     }
 
-    private fun initbserve() {
+    private fun initObserve() {
         viewModel.areaLiveData.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is NetworkResult.Success -> {
@@ -81,19 +114,7 @@ class ZoneFragment : Fragment(), CountryClickListener {
                     val saleRegionResponse =
                         ArrayList<com.example.greenlight.database.AreaResponse>()
                     val saleAreaResponse = ArrayList<com.example.greenlight.database.AreaResponse>()
-//                    binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//
-//                        override fun onQueryTextChange(newText: String): Boolean {
-//                            adapter.filter.filter(newText)
-//                            adapter.notifyDataSetChanged()
-//                            return true
-//                        }
-//
-//                        override fun onQueryTextSubmit(query: String): Boolean {
-//                            return false
-//                        }
-//
-//                    })
+
                     response.sales_country.forEach {
                         countryResponse.add(
                             com.example.greenlight.database.AreaResponse(
@@ -134,9 +155,7 @@ class ZoneFragment : Fragment(), CountryClickListener {
                         saleRegionResponse,
                         zoneResponse
                     )
-                    // list = it.data?.ResponseData as List<SalesArea>
                     binding.apply {
-//                        recyclerviewMovie.setHasFixedSize(true)
                         str = countryResponse.firstOrNull()?.name
                         areaAdapter = AreaAdapter(countryResponse, this@ZoneFragment)
                         recyclerViewArea.adapter = areaAdapter
@@ -153,47 +172,80 @@ class ZoneFragment : Fragment(), CountryClickListener {
                 is NetworkResult.Loading -> {
 
                 }
+
             }
 
         })
     }
-    private fun performSearch() {
-        binding.search .setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-//                search(query)
-                return true
+
+    private fun clickFunction() {
+        binding.search.addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+
+            ) {
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-//                search(newText)
-                return true
+            override fun onTextChanged(
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
+            ) {
+                objectListNew.clear()
+                Log.d("TAG", "::::str " + charSequence.toString())
+                for (j in dataStore.sales_area!!.indices) {
+                    if (dataStore.sales_area!![j].value.lowercase().contains(
+                            charSequence.toString().lowercase(
+                            )
+                        )
+                    ) {
+                        objectListNew.add(dataStore.sales_area!![j])
+
+                    }
+                }
+                areaAdapter.upDateList(objectListNew)
             }
+
+            override fun afterTextChanged(editable: Editable) {}
         })
     }
-
 
     override fun clickOnArea(
         areaResponse: com.example.greenlight.database.AreaResponse
     ) {
         str = areaResponse?.name
+        Log.d("TAG", "onViewCreateclickOnArea: " + str)
 
         if (areaResponse.name.equals("sales_country")) {
             binding.textPer.text = areaResponse.value + "  Performance"
-            areaAdapter.upDateList(dataStore.sales_zone)
+            dataStore.sales_zone?.let { areaAdapter.upDateList(it) }
         } else if (areaResponse.name.equals("sales_zone")) {
             binding.textPer.text = areaResponse.value + "  Performance"
-            areaAdapter.upDateList(dataStore.sales_region)
+            dataStore.sales_region?.let { areaAdapter.upDateList(it) }
         } else if (areaResponse.name.equals("sales_region")) {
+            binding.search.visibility = View.VISIBLE
+//            binding.search.setQueryHint("Search by Name");
             binding.textPer.text = areaResponse.value + "  Performance"
-            areaAdapter.upDateList(dataStore.sales_area)
-        } else {
-            binding.search.visibility=View.VISIBLE
-            binding.search.setQueryHint("Search by Name");
-            binding.textPer.text = areaResponse.value + "  Performance"
-
+            dataStore.sales_area?.let { areaAdapter.upDateList(it) }
         }
+//        else {
+//            binding.search.visibility = View.VISIBLE
+//            binding.search.setQueryHint("Search by Name");
+//            binding.textPer.text = areaResponse.value + "  Performance"
+//
+//        }
 
 //        Toast.makeText(context,"Cell clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onStrValue(str: String) {
+        this.str = str
+
     }
 
 

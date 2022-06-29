@@ -25,6 +25,7 @@ class AreaAdapter @Inject constructor(
     override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
         val search = list[position]
         holder.setData(search)
+        cellClickListener.onStrValue(search.name)
         holder.itemView.setOnClickListener{
             cellClickListener.clickOnArea(search)
         }
@@ -39,6 +40,7 @@ class AreaAdapter @Inject constructor(
         notifyDataSetChanged()
 
     }
+
 
 }
 
